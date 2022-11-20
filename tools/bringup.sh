@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
 
-go build cmd/main.go
+cd src
+go build -o main
 ./main

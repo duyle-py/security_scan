@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"guardrails/src"
+	src "guardrails/src"
 	"math/rand"
 	"os"
 	"os/exec"
