@@ -1,0 +1,32 @@
+version: '3.7'
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports: 
+      - "3000:3000"
+    command: /sec/tools/bringup.sh
+    environment:
+      - DATABASE_URL=postgres://postgres:password@db:5432/postgres?sslmode=disable
+    depends_on:
+      - db
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - HOST=server
+    links:
+      - "server:server"
+    command: /sec/tools/test.py
+    depends_on:
+      - server
+      - db
+  db:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./migrations/1_create_tables.up.sql:/docker-entrypoint-initdb.d/init_db.sql
