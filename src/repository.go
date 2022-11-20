@@ -130,7 +130,7 @@ func RepositoryHandler(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusNoContent)
 	case "PUT":
 		if repo.UserId == "" || repo.Id == 0 {
 			w.WriteHeader(http.StatusBadRequest)

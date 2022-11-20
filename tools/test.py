@@ -53,7 +53,7 @@ class TestToDo(unittest.TestCase):
         
         repo_id = res[0]["id"]
         r = requests.delete(self.repository_server, params={"user_id": user_id, "id": repo_id})
-        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.status_code, 204)
 
         r = requests.get(self.repository_server, params={"user_id": user_id})
         res = json.loads(r.text)
