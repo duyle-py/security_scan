@@ -10,7 +10,6 @@ import (
 
 func ScanRepository(repository string) ([]*Findings, error) {
 	dir, err := ioutil.TempDir("/tmp", "repo")
-	fmt.Println(dir)
 
 	if err != nil {
 		return nil, err
