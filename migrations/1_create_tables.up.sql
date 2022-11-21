@@ -4,6 +4,7 @@ create table repository (
     repo_url text not null,
     repo_name text not null
 );
+CREATE INDEX ON repository (user_id);
 
 create table security_scan (
     id  serial primary key,
@@ -16,3 +17,4 @@ create table security_scan (
     scanning_at timestamptz,
     finished_at timestamptz
 );
+CREATE INDEX ON security_scan (user_id);
