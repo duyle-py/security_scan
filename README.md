@@ -1,11 +1,9 @@
 # Security Scan
 - This project scan small security issues related to public_key and private_key.
-- I think this should be simple so the total of core codes should be smaller than 500 lines.
+- I think this should be simple so the total of core codes in under 500 lines.
 - `main` is out file is really small ~13MB.
 - I only use `github.com/jackc/pgx/v5` lib to work with Postgres Database
 
-## Infra design
-TODO
 ## Project Structure
 - The project structure is really simple
   - src: contains all core source codes
@@ -15,8 +13,6 @@ TODO
     - scan.go contains all MVC of Scan Service. Scan Service is defined at "/scan" API
   - tools: contains deployment, stress-test and integration test tools
   - migrations: contains the migration instructions
-
-
 
 ## Database Schema
 - repository table
@@ -120,10 +116,33 @@ curl -v -L  "localhost:3000/scan?user_id=1"
 # result is [{"id":3,"status":"Success","user_id":"1","repo_url":"https://github.com/duyle-py/security_scan","repo_name":"new_sec","findings":[{"type":"sast","ruleId":"G402","location":{"path":"src/lib_test.go","position":{"begin":{"line":"20"}}},"metadata":{"description":"private_key exists here","severity":"HIGH"}},{"type":"sast","ruleId":"G402","location":{"path":"src/lib.go","position":{"begin":{"line":"58"}}},"metadata":{"description":"private_key exists here","severity":"HIGH"}},{"type":"sast","ruleId":"G402","location":{"path":"src/lib_test.go","position":{"begin":{"line":"20"}}},"metadata":{"description":"public_key exists here","severity":"HIGH"}},{"type":"sast","ruleId":"G402","location":{"path":"src/lib.go","position":{"begin":{"line":"58"}}},"metadata":{"description":"public_key exists here","severity":"HIGH"}}],"queued_at":"2022-11-20T10:38:28.167228Z","scanning_at":"2022-11-20T10:38:29.336548Z","finished_at":"2022-11-20T10:38:29.336548Z"}]   
 
 ```
-## benchmark
 
+## Infra design
+- My project is designed for non-blocking security scan for repositories, so we can scale multiple machines.
+- Because we have two main services here: Repository and Scan Services. 
+  - Repository Service is used for CRUD Repository only.
+  - Scan Service contains two Methods are POST which scan repo and GET which list scan results.
+    - POST method is really heavy, we can split it into a service. Scale it into multiple machine.
+- My codebase is really simple now, so split it into a microservice is really simple.
+
+## Local Starting
+```
+docker compose up --build
+```
+
+## Intergration testing
+```
+docker compose run test
+```
+
+## Unit testing
+```
+go test src/*.go -v
+```
+
+## Stress test 
   - `time go run tools/thrasher.go`
-  - Use Linux repo ~ 4GB to test grep performance
+  - I used linux repository ~ 4GB to test grep performance, this repository is already downloaded in my computer. My specification is i7-11800H @ 2.30GHz × 16 cores and 64GB RAMs.
 ```
 starting thrasher
 500 counts in 1m19.904484041s
@@ -131,3 +150,8 @@ thats 6.26 repo/sec
 go run tools/thrasher.go  731.90s user 504.58s system 1543% cpu 1:20.12 total
 
 ```
+
+## Extra features
+- Fast downloading repository. Now i'm using `git clone`, it will fetch all codes into a machine. We can use `git checkout` to fetch some parts we need. But need to design how to store and redirect repository in multiple machine or a machine. 
+- Grep searching. Check performance of `ripgrep` lib and replace grep `https://healeycodes.com/beating-grep-with-go` 
+- 
