@@ -1,8 +1,16 @@
 # Security Scan
-- This project scan small security issues related to public_key and private_key.
+- This project scans small security issues related to public_key and private_key.
 - I think this should be simple so the total of core codes in under 500 lines.
 - `main` is out file is really small ~13MB.
 - I only use `github.com/jackc/pgx/v5` lib to work with Postgres Database
+
+## Infra design
+- My project is designed for non-blocking security scan for repositories, so we can scale multiple machines.
+- Because we have two main services here: Repository and Scan Services. 
+  - Repository Service is used for CRUD Repository only.
+  - Scan Service contains two Methods are POST which scans repo and GET which lists scan results.
+    - POST method is really heavy, we can split it into a service. Scale it into multiple machines.
+- My codebase is really simple now, so splitting it into a microservice is really simple.
 
 ## Project Structure
 - The project structure is really simple
@@ -117,20 +125,12 @@ curl -v -L  "localhost:3000/scan?user_id=1"
 
 ```
 
-## Infra design
-- My project is designed for non-blocking security scan for repositories, so we can scale multiple machines.
-- Because we have two main services here: Repository and Scan Services. 
-  - Repository Service is used for CRUD Repository only.
-  - Scan Service contains two Methods are POST which scan repo and GET which list scan results.
-    - POST method is really heavy, we can split it into a service. Scale it into multiple machine.
-- My codebase is really simple now, so split it into a microservice is really simple.
-
 ## Local Starting
 ```
 docker compose up --build
 ```
 
-## Intergration testing
+## Integration testing
 ```
 docker compose run test
 ```
@@ -152,6 +152,6 @@ go run tools/thrasher.go  731.90s user 504.58s system 1543% cpu 1:20.12 total
 ```
 
 ## Extra features
-- Fast downloading repository. Now i'm using `git clone`, it will fetch all codes into a machine. We can use `git checkout` to fetch some parts we need. But need to design how to store and redirect repository in multiple machine or a machine. 
+- Fast downloading repository. Now i'm using `git clone`, it will fetch all codes into a machine. We can use `git checkout` to fetch some parts we need. But need to design how to store and redirect repository in multiple machines or a machine. 
 - Grep searching. Check performance of `ripgrep` lib and replace grep `https://healeycodes.com/beating-grep-with-go` 
 - 
