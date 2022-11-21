@@ -151,7 +151,7 @@ go run tools/thrasher.go  731.90s user 504.58s system 1543% cpu 1:20.12 total
 
 ```
 
-## Extra features
+## Extra features if i have more time
 - Fast downloading repository. Now i'm using `git clone`, it will fetch all codes into a machine. We can use `git checkout` to fetch some parts we need. But need to design how to store and redirect repository in multiple machines or a machine. 
 - Grep searching. Check performance of `ripgrep` lib and replace grep `https://healeycodes.com/beating-grep-with-go` 
-- 
+- Smart POST Scan Routing or Smart Scaling. Because `POST /scan` API is large variance means every incoming requests use the difference of resources (CPU, Network, Disk, IO, RAM). For Example, big repo need a big network to download. How to find the best way to allocate the batch of requests to the correct machine. Or simpler, just scaling machine when some resources hit some target metrics.
