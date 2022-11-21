@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+//ScanRepository create a temp dir, clone a repository then scan results
 func ScanRepository(repository string) ([]*Findings, error) {
 	dir, err := ioutil.TempDir("/tmp", "repo")
 
@@ -23,6 +24,8 @@ func ScanRepository(repository string) ([]*Findings, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	//Get the repository name dir
 	repo_parts := strings.Split(repository, "/")
 	repo_name := repo_parts[len(repo_parts)-1]
 	res, _ := FindWords(dir + "/" + repo_name)
@@ -54,6 +57,7 @@ type Metadata struct {
 	Severity    string `json:"severity"`
 }
 
+//FindWords scan a dir with some keywords we defined
 func FindWords(dir string) ([]*Findings, error) {
 	keyWords := []string{"private_key", "public_key"}
 	results := make([]*Findings, 0)
@@ -63,6 +67,8 @@ func FindWords(dir string) ([]*Findings, error) {
 		conf.Dir = dir
 
 		out, _ := conf.Output()
+
+		//Grep results are represented line by lines
 		res := strings.Split(string(out), "\n")
 		for _, r := range res {
 			a := strings.Split(r, ":")

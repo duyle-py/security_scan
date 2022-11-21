@@ -12,8 +12,9 @@ import (
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 
+	//Really slow because download 4GB data
 	if _, err := os.Stat("/tmp/linux"); os.IsNotExist(err) {
-		fmt.Println("Downloading linux repo")
+		fmt.Println("Downloading linux repo. Really slow because download 4GB data")
 		conf := exec.Command("git", "clone", "https://github.com/torvalds/linux")
 		conf.Dir = "/tmp"
 		conf.Output()

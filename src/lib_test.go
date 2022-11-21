@@ -6,6 +6,7 @@ import (
 	"testing"
 )
 
+//TestGrep create a temporary file with two key words and test FindWork func
 func TestGrep(t *testing.T) {
 	dir, err := ioutil.TempDir("/tmp", "sec")
 	if err != nil {
