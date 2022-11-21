@@ -6,7 +6,7 @@ import binascii
 import os
 import json
 import time
-
+import socket
 
 logging.basicConfig(format='%(name)s %(levelname)s %(message)s')
 logger = logging.getLogger(__name__)
@@ -115,4 +115,14 @@ class TestToDo(unittest.TestCase):
         self.assertEqual(r.status_code, 400)
 
 if __name__ == '__main__':
+# wait for sesrvers
+  while 1:
+    try:
+      s = socket.create_connection((f"{HOST}", 3000), timeout=0.5)
+      s.close()
+      break
+    except (ConnectionRefusedError, OSError):
+      time.sleep(0.5)
+      print("waiting for servers")
+      continue
   unittest.main()
